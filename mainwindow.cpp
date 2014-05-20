@@ -19,7 +19,7 @@ MainWindow::MainWindow()
     manager = new QNetworkAccessManager();
     QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newuser()));
 
-    if (!tcpServer->listen(QHostAddress::Any, 33333) && server_status==0) {
+    if (!tcpServer->listen(QHostAddress::Any, 80) && server_status==0) {
         qDebug() <<  tcpServer->errorString();
     } else {
         server_status=1;
