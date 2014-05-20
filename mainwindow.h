@@ -23,8 +23,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_starting_clicked();
-    void on_stoping_clicked();
     void newuser();
     void slotReadClient();
     void serviceRequestFinished(QNetworkReply* reply);
@@ -34,6 +32,8 @@ private:
     int server_status;
     QMap<int,QTcpSocket *> SClients;
     QNetworkAccessManager *manager;
+    static int m_nClientsName;
+    QString m_sConName;
 
     PUserDAO m_pUserDAO;
     PForumDAO m_pForumDAO;

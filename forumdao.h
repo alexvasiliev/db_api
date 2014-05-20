@@ -18,8 +18,9 @@ public:
     JMap Create     (PForum forum);
     JMap ForumDetails(JMap input);
 
+
 private:
-    PDatabaseConnection m_pConnection;
+    //PDatabaseConnection m_pConnection;
     QString         m_sName;
 };
 

@@ -19,7 +19,7 @@ MainWindow::MainWindow()
     manager = new QNetworkAccessManager();
     QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newuser()));
 
-    if (!tcpServer->listen(QHostAddress::Any, 80) && server_status==0) {
+    if (!tcpServer->listen(QHostAddress::Any, 33333) && server_status==0) {
         qDebug() <<  tcpServer->errorString();
     } else {
         server_status=1;
@@ -38,11 +38,6 @@ MainWindow::~MainWindow()
     server_status=0;
 }
 
-void MainWindow::on_starting_clicked()
-{
-
-
-}
 
 void MainWindow::serviceRequestFinished(QNetworkReply* reply)
 {
@@ -50,22 +45,6 @@ void MainWindow::serviceRequestFinished(QNetworkReply* reply)
     delete reply;
 }
 
-void MainWindow::on_stoping_clicked()
-{
-    if(server_status==1){
-        foreach(int i,SClients.keys()){
-            QTextStream os(SClients[i]);
-            os.setAutoDetectUnicode(true);
-            os << QDateTime::currentDateTime().toString() << "\n";
-            SClients[i]->close();
-            SClients.remove(i);
-        }
-        tcpServer->close();
-        //ui->textinfo->append(QString::fromUtf8("Сервер остановлен!"));
-        qDebug() << QString::fromUtf8("Сервер остановлен!");
-        server_status=0;
-    }
-}
 
 
 void MainWindow::newuser()
@@ -94,6 +73,10 @@ void MainWindow::slotReadClient()
         QtJson::JsonObject  result;
         QtJson::JsonArray   resultArr;
         bool                ArrFlag = 0;
+        for(int i = 0; i < tokens.size(); ++i)
+        {
+            qDebug() << tokens[i];
+        }
         if (tokens[0] == "GET")
         {
             if(requestList.size() < 4)
@@ -463,6 +446,10 @@ void MainWindow::slotReadClient()
         {
             if(requestList.size() < 4)
             {
+            }
+            else if (requestList[3] == QString("clear"))
+            {
+                m_pPostDAO->ClearDatabase();
             }
             else if (requestList[3] == QString("user"))
             {

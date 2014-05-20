@@ -29,7 +29,7 @@ public:
     void ClearDatabase();
 
 private:
-    PDatabaseConnection   m_pConnection;
+    //PDatabaseConnection   m_pConnection;
     QString         m_sName;
 };
 typedef QSharedPointer<PostDAO> PPostDAO;

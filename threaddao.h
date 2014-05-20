@@ -24,7 +24,7 @@ public:
     JMap UnSubscribe(QString sUser, int nThreadId);
     QVariantList List(JMap input);
 private:
-    PDatabaseConnection   m_pConnection;
+    //PDatabaseConnection   m_pConnection;
     QString m_sName;
 };
 
