@@ -29,7 +29,6 @@ private slots:
 
 private:
     QTcpServer *tcpServer;
-    int server_status;
     QMap<int,QTcpSocket *> SClients;
     QNetworkAccessManager *manager;
     static int m_nClientsName;

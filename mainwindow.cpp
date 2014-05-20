@@ -19,10 +19,9 @@ MainWindow::MainWindow()
     manager = new QNetworkAccessManager();
     QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newuser()));
 
-    if (!tcpServer->listen(QHostAddress::Any, 33333) && server_status==0) {
+    if (!tcpServer->listen(QHostAddress::Any, 80)) {
         qDebug() <<  tcpServer->errorString();
     } else {
-        server_status=1;
         qDebug() << tcpServer->isListening() << "TCPSocket listen on port";
     }
 
@@ -35,7 +34,6 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     QSqlDatabase::removeDatabase("mysqlcon");
-    server_status=0;
 }
 
 
@@ -49,14 +47,10 @@ void MainWindow::serviceRequestFinished(QNetworkReply* reply)
 
 void MainWindow::newuser()
 {
-    if(server_status==1){
-        //qDebug() << QString::fromUtf8("У нас новое соединение!");
-        //ui->textinfo->append(QString::fromUtf8("У нас новое соединение!"));
-        QTcpSocket* clientSocket=tcpServer->nextPendingConnection();
-        int idusersocs=clientSocket->socketDescriptor();
-        SClients[idusersocs]=clientSocket;
-        QObject::connect(SClients[idusersocs],SIGNAL(readyRead()),this, SLOT(slotReadClient()));
-    }
+    QTcpSocket* clientSocket=tcpServer->nextPendingConnection();
+    int idusersocs=clientSocket->socketDescriptor();
+    SClients[idusersocs]=clientSocket;
+    QObject::connect(SClients[idusersocs],SIGNAL(readyRead()),this, SLOT(slotReadClient()));
 }
 
 void MainWindow::slotReadClient()
@@ -73,10 +67,6 @@ void MainWindow::slotReadClient()
         QtJson::JsonObject  result;
         QtJson::JsonArray   resultArr;
         bool                ArrFlag = 0;
-        for(int i = 0; i < tokens.size(); ++i)
-        {
-            qDebug() << tokens[i];
-        }
         if (tokens[0] == "GET")
         {
             if(requestList.size() < 4)
@@ -565,7 +555,6 @@ void MainWindow::slotReadClient()
                     spike = 1;
                 spikeresult = QtJson::serialize(resultArr);
                 spikeresult.replace(QByteArray("\"\""), QByteArray("null"));
-                //spikeresult.replace(QByteArray(": [ \""), QByteArray(": [ u\""));
                 if(spike == 1)
                     spikeresult.replace(QByteArray("[  ]"), QByteArray("{\"response\": [  ]} "));
                 clientSocket->write(spikeresult);
@@ -574,7 +563,6 @@ void MainWindow::slotReadClient()
             {
                 spikeresult = QtJson::serialize(result);
                 spikeresult.replace(QByteArray("\"\""), QByteArray("null"));
-                //spikeresult.replace(QByteArray(": [ \""), QByteArray(": [ u\""));
                 clientSocket->write(spikeresult);
             }
             //qDebug() << spikeresult;
