@@ -19,7 +19,7 @@ MainWindow::MainWindow()
     manager = new QNetworkAccessManager();
     QObject::connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newuser()));
 
-    if (!tcpServer->listen(QHostAddress::Any, 33333)) {
+    if (!tcpServer->listen(QHostAddress::Any, 80)) {
         qDebug() <<  tcpServer->errorString();
     } else {
         qDebug() << tcpServer->isListening() << "TCPSocket listen on port";
